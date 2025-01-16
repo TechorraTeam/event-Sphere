@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "634815997478",
+    "project_id": "event-sphere-app",
+    "storage_bucket": "event-sphere-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634815997478:android:389dac06f75d3301f1e8e7",
+        "android_client_info": {
+          "package_name": "com.example.event_sphere"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPb3QTU50bcVdok-Se8U8k1kf46Lt8as4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
