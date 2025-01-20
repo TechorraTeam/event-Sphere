@@ -1,3 +1,4 @@
+import 'package:event_sphere/view/widgets/custon_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,12 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
               width: 250.w,
               height: 250.h,
               child: Image.asset('assets/Event Sphere Logo.png')),
-            Container(
-              child: TextFormField(
-                controller: emailController,
-                
-              ),
-            )
+            CustomGui.customButton('Login', (){
+              
+            })
           ],
         ),
       ),
