@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class UserDataModel {
@@ -19,7 +21,7 @@ class UserDataModel {
   Image? profilePicture;
   factory UserDataModel.fromDocumentSnapshot(DocumentSnapshot doc) =>
       UserDataModel(
-          id: doc["id"],
+          id: doc["uid"],
           name: doc["name"],
           type: doc["type"],
           email: doc["email"],
@@ -28,13 +30,12 @@ class UserDataModel {
           );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
+        "uid": FirebaseAuth.instance.currentUser!.uid,
         "name": name,
         "type": type,
         "email": email,
         "gender": gender,
         "profilePicture": profilePicture,
         "creationDate": creationDate,
-        
       };
 }

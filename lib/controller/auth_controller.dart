@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController extends GetxController {
   bool isNotAuthorised = false;
+  
   Future<void> signUp(String email, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -22,7 +23,7 @@ class AuthController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password);
       isNotAuthorised = false;
       update();
-      Get.to(DashboardScreen());
+      Get.off(DashboardScreen());
 
     } on FirebaseAuthException catch (e) {
       isNotAuthorised = true;
