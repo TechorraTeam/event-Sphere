@@ -46,7 +46,10 @@ class Singup extends StatelessWidget {
               SizedBox(
                 height: 15,
               ),
-              CustomGui.customButton("SignUp", () {}, context)
+              CustomGui.customButton(
+                "SignUp",
+                () {},
+              )
             ],
           ),
         ),
