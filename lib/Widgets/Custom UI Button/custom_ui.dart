@@ -48,4 +48,32 @@ class CustomGui {
       },
     );
   }
+  static Widget textField(TextEditingController controller, String text) {
+    return Container(
+        height: 45.h,
+        width: 280.w,
+        child: TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: text,
+            labelStyle: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+            hintText: 'Enter your $text', 
+            hintStyle: TextStyle(
+              color: Colors.grey[400],
+              fontStyle: FontStyle.italic,
+            ),
+            border: OutlineInputBorder(
+              // Default border
+              borderRadius: BorderRadius.circular(0),
+              borderSide: BorderSide(
+                color: Colors.blue,
+                width: 2,
+              ),
+            ),
+          ),
+        ));
+  }
 }
