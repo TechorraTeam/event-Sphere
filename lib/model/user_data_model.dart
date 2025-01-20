@@ -18,7 +18,7 @@ class UserDataModel {
   String? email;
   String? gender;
   final DateTime creationDate ;
-  Image? profilePicture;
+  String? profilePicture;
   factory UserDataModel.fromDocumentSnapshot(DocumentSnapshot doc) =>
       UserDataModel(
           id: doc["uid"],
