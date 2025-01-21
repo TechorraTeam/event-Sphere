@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController extends GetxController {
   bool isNotAuthorised = false;
-  List<UserDataModel> userModel=[];
+  List<UserDataModel> userModel = [];
   Future<void> signUp(String email, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -26,16 +26,16 @@ class AuthController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password);
       isNotAuthorised = false;
       update();
+      QuerySnapshot<Map<String, dynamic>> data =
+          await FirebaseFirestore.instance.collection('users').get();
+      List<DocumentSnapshot> allData = data.docs;
       Get.off(DashboardScreen());
-      QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('users').get();
-      List<DocumentSnapshot> allData=data.docs;
 
-      for(var data in allData){
+      for (var data in allData) {
         userModel.add(UserDataModel.fromDocumentSnapshot(data));
       }
       update();
       Get.off(DashboardScreen());
-
     } on FirebaseAuthException catch (e) {
       isNotAuthorised = true;
       update();
@@ -51,14 +51,34 @@ class AuthController extends GetxController {
     print('Error signing out: $e');
   }
 }
-  Future<void> sendPasswordResetEmail(String email) async {
-  try {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-    print('Password reset email sent');
-  } catch (e) {
-    print('Error: $e');
+
+  Future<void> addUserToDatabase(
+    String username,
+    String email,
+    String gender,
+  ) async {
+    final userID = FirebaseAuth.instance.currentUser;
+    final docRef =
+        FirebaseFirestore.instance.collection("users").doc(userID!.uid);
+    final userDataModel = UserDataModel(
+      name: username,
+      email: email,
+      gender: gender,
+      id: userID.uid,
+    );
+    await docRef.set(userDataModel.toMap());
+    userModel.add(userDataModel);
+    update();
   }
-}
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      print('Password reset email sent');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
   checkUserExists(){
     if(FirebaseAuth.instance.currentUser!=null){
       Get.off(DashboardScreen());

@@ -14,7 +14,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(builder: (controller){
+    return GetBuilder<AuthController>(builder: (controller) {
       return Scaffold(
         appBar: AppBar(
 
@@ -165,6 +165,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       );
     });
-    
   }
 }
