@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_sphere/model/user_data_model.dart';
+import 'package:event_sphere/view/screens/Login_Screen.dart';
 import 'package:event_sphere/view/screens/dashboard.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,7 +41,16 @@ class AuthController extends GetxController {
       update();
       print(e.message);
     }
+  } 
+
+  void logOut() async {
+  try {
+    await FirebaseAuth.instance.signOut();
+    print('User signed out');
+  } catch (e) {
+    print('Error signing out: $e');
   }
+}
 
   Future<void> addUserToDatabase(
     String username,
@@ -74,4 +84,12 @@ class AuthController extends GetxController {
       print('Error: $e');
     }
   }
+  checkUserExists(){
+    if(FirebaseAuth.instance.currentUser!=null){
+      Get.off(DashboardScreen());
+    }else{
+      Get.off(LoginScreen());
+    }
+  }
+
 }
