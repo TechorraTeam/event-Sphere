@@ -150,5 +150,4 @@ class EventController extends GetxController {
       return [];
     }
   }
-
 }

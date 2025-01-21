@@ -14,7 +14,7 @@ class MyEventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Events'),
+        title: Text('My Events'),
       ),
       body: FutureBuilder<List<EventDataModel>>(
         future: _eventController.getEventsByUserId(FirebaseAuth.instance.currentUser!.uid),
