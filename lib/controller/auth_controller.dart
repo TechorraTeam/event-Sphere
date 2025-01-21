@@ -28,6 +28,7 @@ class AuthController extends GetxController {
       QuerySnapshot<Map<String, dynamic>> data =
           await FirebaseFirestore.instance.collection('users').get();
       List<DocumentSnapshot> allData = data.docs;
+      Get.off(DashboardScreen());
 
       for (var data in allData) {
         userModel.add(UserDataModel.fromDocumentSnapshot(data));
@@ -58,5 +59,14 @@ class AuthController extends GetxController {
     await docRef.set(userDataModel.toMap());
     userModel.add(userDataModel);
     update();
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      print('Password reset email sent');
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
