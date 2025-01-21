@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w500))),
                 ),
                 SizedBox(
-                  height: 40.h,
+                  height: 20.h,
                 ),
                 CustomGui.customButton('Login', () {
                   authController.login(

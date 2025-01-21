@@ -6,8 +6,8 @@ import 'package:event_sphere/controller/event_controller.dart';
 import 'package:event_sphere/model/event_data_model.dart';
 
 class EventsScreen extends StatelessWidget {
-  final EventController _eventController = Get.find<EventController>();
-
+  //final EventController _eventController = Get.find<EventController>();
+final EventController _eventController = Get.put(EventController());
   EventsScreen({super.key});
   @override
   Widget build(BuildContext context) {

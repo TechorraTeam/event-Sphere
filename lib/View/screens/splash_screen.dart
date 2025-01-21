@@ -43,17 +43,6 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: const EdgeInsets.symmetric(vertical: 250.0),
               child: Image.asset('assets/images/splash_screen_logo.png', height: 100),
             ), 
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: LinearProgressIndicator(
-                value: _progressValue,
-                minHeight: 10,
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.orange, // Your logo color
-                backgroundColor: Colors.grey[200],
-              ),
-            ),
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:event_sphere/controller/auth_controller.dart';
+import 'package:event_sphere/controller/event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -12,10 +13,12 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   AuthController authController = Get.put(AuthController());
+  EventController eventController = Get.put(EventController());
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(builder: (controller) {
-      return Scaffold(
+      return GetBuilder<EventController>(builder: (eventController){
+        return Scaffold(
         appBar: AppBar(
 
           toolbarHeight: 60.h, 
@@ -164,6 +167,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
 
       );
+      });
     });
   }
 }
