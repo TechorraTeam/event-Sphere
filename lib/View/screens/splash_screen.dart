@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:event_sphere/view/screens/login_screen.dart';
+import 'package:event_sphere/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  AuthController authController = Get.put(AuthController());
   double _progressValue = 0.0;
   @override
   void initState() {
@@ -25,10 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if (_progressValue >= 1.0) {
         timer.cancel();
-        Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
+        authController.checkUserExists();
       }
     });
   }
