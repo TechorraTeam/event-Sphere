@@ -1,6 +1,7 @@
 import 'package:event_sphere/Widgets/Custom%20UI%20Button/custom_ui.dart';
 import 'package:event_sphere/controller/auth_controller.dart';
 import 'package:event_sphere/view/SignUp/singup.dart';
+import 'package:event_sphere/view/screens/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -67,18 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.only(left: 185.w),
                   child: GestureDetector(
                       onTap: () async {
-                        if (emailController.text.isNotEmpty) {
-                          await authController
-                              .sendPasswordResetEmail(emailController.text);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Password reset email sent!')),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please enter an email')),
-                          );
-                        }
+                        Get.to(ForgotPassword());
                       },
                       child: Text('Forgot Password?',
                           style: TextStyle(
