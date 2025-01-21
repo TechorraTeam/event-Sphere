@@ -41,16 +41,16 @@ class AuthController extends GetxController {
       update();
       print(e.message);
     }
-  } 
+  }
 
   void logOut() async {
-  try {
-    await FirebaseAuth.instance.signOut();
-    print('User signed out');
-  } catch (e) {
-    print('Error signing out: $e');
+    try {
+      await FirebaseAuth.instance.signOut();
+      print('User signed out');
+    } catch (e) {
+      print('Error signing out: $e');
+    }
   }
-}
 
   Future<void> addUserToDatabase(
     String username,
@@ -67,14 +67,34 @@ class AuthController extends GetxController {
       id: userID.uid,
     );
     await docRef.set(userDataModel.toMap());
-    usingUserDataModel(userDataModel);
-    update();
+    // usingUserDataModel(userDataModel);
+    // update();
   }
 
-  usingUserDataModel(UserDataModel userDataModel) {
-    userModel.add(userDataModel);
-    update();
+  Future<void> fetchingUserDataFromFireStore() async {
+    final userId = FirebaseAuth.instance.currentUser;
+    try {
+      DocumentSnapshot docRef = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId!.uid)
+          .get();
+
+      if (docRef.exists) {
+        UserDataModel userData = UserDataModel.fromDocumentSnapshot(docRef);
+        userModel = [userData];
+        update();
+      } else {
+        Get.snackbar("Error", "User not found.");
+      }
+    } on FirebaseException catch (e) {
+      Get.snackbar("Error", "$e");
+    }
   }
+
+  // usingUserDataModel(UserDataModel userDataModel) {
+  //   userModel.add(userDataModel);
+  //   update();
+  // }
 
   Future<void> sendPasswordResetEmail(String email) async {
     try {
@@ -84,12 +104,12 @@ class AuthController extends GetxController {
       print('Error: $e');
     }
   }
-  checkUserExists(){
-    if(FirebaseAuth.instance.currentUser!=null){
+
+  checkUserExists() {
+    if (FirebaseAuth.instance.currentUser != null) {
       Get.off(DashboardScreen());
-    }else{
+    } else {
       Get.off(LoginScreen());
     }
   }
-
 }
