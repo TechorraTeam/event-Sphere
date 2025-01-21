@@ -42,10 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text('Login',
                               style: TextStyle(
                                   fontSize: 18, fontWeight: FontWeight.w500)),
-                          authController.isNotAuthorised ? Text(
-                            'Incorrect email or password',
-                            style: TextStyle(fontSize: 15, color: Colors.red),
-                          ) :Container(),
+                          authController.isNotAuthorised
+                              ? Text(
+                                  'Incorrect email or password',
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.red),
+                                )
+                              : Container(),
                         ],
                       )),
                 ),
@@ -61,37 +64,60 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10.h,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 40.w),
-                  child: Row(
-                    // mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Don\'t have an account yet?',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            Get.to(Singup());
-                          },
-                          child: Text('Sign up instead',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.w500))),
-                    ],
-                  ),
+                  padding: EdgeInsets.only(left: 185.w),
+                  child: GestureDetector(
+                      onTap: () async {
+                        if (emailController.text.isNotEmpty) {
+                          await authController
+                              .sendPasswordResetEmail(emailController.text);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Password reset email sent!')),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please enter an email')),
+                          );
+                        }
+                      },
+                      child: Text('Forgot Password?',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.orange,
+                              fontWeight: FontWeight.w500))),
                 ),
                 SizedBox(
                   height: 40.h,
                 ),
-                CustomGui.customButton('Login', ()  {
+                CustomGui.customButton('Login', () {
                   authController.login(
                       emailController.text, passwordController.text);
                 }),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Row(
+                  // mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Don\'t have an account yet?',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          Get.to(Singup());
+                        },
+                        child: Text('Sign up instead',
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w500))),
+                  ],
+                ),
               ],
             ),
           ),

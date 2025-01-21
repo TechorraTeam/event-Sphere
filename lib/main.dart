@@ -1,5 +1,6 @@
 import 'package:event_sphere/View/SignUp/singup.dart';
 import 'package:event_sphere/view/screens/Login_Screen.dart';
+import 'package:event_sphere/view/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,12 +24,10 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
+          
           home:
               //TestingFile(),
-              LoginScreen(),
+              SplashScreen(),
         );
       },
     );
