@@ -24,8 +24,10 @@ class CustomGui {
         ));
   }
 
-  static Widget customFormField(String labelText, String validatorText) {
+  static Widget customFormField(String labelText, String validatorText,
+      bool isPasswordType, TextEditingController controller) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(color: Colors.black),
@@ -40,6 +42,12 @@ class CustomGui {
           ),
         ),
       ),
+      obscureText: isPasswordType,
+      enableSuggestions: !isPasswordType,
+      autocorrect: !isPasswordType,
+      keyboardType: isPasswordType
+          ? TextInputType.visiblePassword
+          : TextInputType.emailAddress,
       validator: (value) {
         if (value == null) {
           return validatorText;
@@ -48,6 +56,7 @@ class CustomGui {
       },
     );
   }
+
   static Widget textField(TextEditingController controller, String text) {
     return Container(
         height: 45.h,
@@ -60,7 +69,7 @@ class CustomGui {
               fontSize: 16,
               color: Colors.grey,
             ),
-            hintText: 'Enter your $text', 
+            hintText: 'Enter your $text',
             hintStyle: TextStyle(
               color: Colors.grey[400],
               fontStyle: FontStyle.italic,
@@ -76,4 +85,43 @@ class CustomGui {
           ),
         ));
   }
+
+  static Widget genderRadio(ValueNotifier<String> selectedGender) {
+    return ValueListenableBuilder<String>(
+      valueListenable: selectedGender,
+      builder: (context, value, child) {
+        return Row(
+          children: [
+            Radio<String>(
+              value: "Male",
+              groupValue: value,
+              onChanged: (newValue) {
+                selectedGender.value = newValue!;
+              },
+            ),
+            Text("Male"),
+            Radio<String>(
+              value: "Female",
+              groupValue: value,
+              onChanged: (newValue) {
+                selectedGender.value = newValue!;
+              },
+            ),
+            Text("Female"),
+            Radio<String>(
+              value: "Other",
+              groupValue: value,
+              onChanged: (newValue) {
+                selectedGender.value = newValue!;
+              },
+            ),
+            Text("Other"),
+          ],
+        );
+      },
+    );
+  }
+
+  static final emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 }

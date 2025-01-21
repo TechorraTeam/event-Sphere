@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController extends GetxController {
   bool isNotAuthorised = false;
-  List<UserDataModel> userModel=[];
+  List<UserDataModel> userModel = [];
   Future<void> signUp(String email, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -25,19 +25,38 @@ class AuthController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password);
       isNotAuthorised = false;
       update();
-      QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('users').get();
-      List<DocumentSnapshot> allData=data.docs;
+      QuerySnapshot<Map<String, dynamic>> data =
+          await FirebaseFirestore.instance.collection('users').get();
+      List<DocumentSnapshot> allData = data.docs;
 
-      for(var data in allData){
+      for (var data in allData) {
         userModel.add(UserDataModel.fromDocumentSnapshot(data));
       }
       update();
       Get.off(DashboardScreen());
-
     } on FirebaseAuthException catch (e) {
       isNotAuthorised = true;
       update();
       print(e.message);
     }
+  }
+
+  Future<void> addUserToDatabase(
+    String username,
+    String email,
+    String gender,
+  ) async {
+    final userID = FirebaseAuth.instance.currentUser;
+    final docRef =
+        FirebaseFirestore.instance.collection("users").doc(userID!.uid);
+    final userDataModel = UserDataModel(
+      name: username,
+      email: email,
+      gender: gender,
+      id: userID.uid,
+    );
+    await docRef.set(userDataModel.toMap());
+    userModel.add(userDataModel);
+    update();
   }
 }

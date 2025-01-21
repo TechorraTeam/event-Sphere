@@ -13,11 +13,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   AuthController authController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AuthController>(builder: (controller){
+    return GetBuilder<AuthController>(builder: (controller) {
       return Scaffold(
-        body:Text(controller.userModel![0].email!)
+        body: Center(
+          child: Text(
+            controller.userModel[0].email.toString(),
+          ),
+        ),
       );
     });
-    
   }
 }
