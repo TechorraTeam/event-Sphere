@@ -31,7 +31,6 @@ class EventDetailScreen extends StatelessWidget {
           );
         } else {
           event = snapshot.data!;
-
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
@@ -210,17 +209,31 @@ class EventDetailScreen extends StatelessWidget {
                             )),
                           ],
                         ),
-                        ElevatedButton(
-                            onPressed: ()=>{},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepOrange, // Background color
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12), // Radius of the button
-                              ),
-                            ),
-                            child: Text("Get A Ticket", style: TextStyle(
-                                color: Colors.white
-                            ),)
+                        FutureBuilder<bool>(
+                          future: _eventController.isUserAttendingEvent(event?.id ?? ""),
+                          builder: (context, snapshot) {
+                            bool isAttending = snapshot.data ?? false;
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Text("Loading");
+                            }
+                            else {
+                              return ElevatedButton(
+                                onPressed: isAttending ? null : () {
+                                  _eventController.addEventToUser(event?.id ?? "");
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isAttending ? Colors.blueGrey : Colors.deepOrange,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  isAttending ? "Attending" : "Get A Ticket",
+                                  style: isAttending ?TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.white),
+                                ),
+                              );
+                            }
+                          },
                         )
                       ],
                     )

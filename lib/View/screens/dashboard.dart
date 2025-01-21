@@ -1,3 +1,6 @@
+import 'package:event_sphere/View/screens/Add_Event_Form.dart';
+import 'package:event_sphere/View/screens/Events_Screen.dart';
+import 'package:event_sphere/View/screens/My_Events_Screen.dart';
 import 'package:event_sphere/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -101,7 +104,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             "Publish Event",
                             style: TextStyle(color: Colors.black), 
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(AddEventForm());
+                          },
+                        ),
+                      ),
+                      Container(
+                        color: const Color.fromARGB(255, 244, 241, 241),
+                        child: ListTile(
+                          title: const Text(
+                            "All Events",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          onTap: () {
+                            Get.to(EventsScreen());
+                          },
                         ),
                       ),
                       Container(
@@ -111,7 +128,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             "My Events",
                             style: TextStyle(color: Colors.black), 
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(MyEventsScreen());
+                          },
                         ),
                       ),
                     ],
