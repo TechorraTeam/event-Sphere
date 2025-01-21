@@ -57,6 +57,11 @@ class AuthController extends GetxController {
       id: userID.uid,
     );
     await docRef.set(userDataModel.toMap());
+    usingUserDataModel(userDataModel);
+    update();
+  }
+
+  usingUserDataModel(UserDataModel userDataModel) {
     userModel.add(userDataModel);
     update();
   }
