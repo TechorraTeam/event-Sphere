@@ -1,3 +1,4 @@
+import 'package:event_sphere/Widgets/custom%20list%20view/dashboard_popular_events.dart';
 import 'package:event_sphere/controller/auth_controller.dart';
 import 'package:event_sphere/controller/event_controller.dart';
 import 'package:flutter/material.dart';
@@ -47,32 +48,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Popular Events"),
+                    Text("Popular Events",style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500
+                    ),),
                     Text(
                       "View All",
                       style: TextStyle(
                           color: const Color.fromARGB(255, 156, 156, 156),
-                          fontSize: 11),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
               ),
-              Text(controller.userModel[0].gender.toString()),
-              // controller.userModel.isEmpty
-              //     ? Column(
-              //         children: [CircularProgressIndicator()],
-              //       )
-              //     : Expanded(
-              //         child: ListView.builder(
-              //             itemCount: controller.userModel.length,
-              //             itemBuilder: (context, index) {
-              //               var userdata = controller.userModel[index];
-              //               return ListTile(
-              //                 title: Text(userdata.name ?? "dummy"),
-              //                 subtitle: Text(userdata.email ?? ""),
-              //               );
-              //             }),
-              //       )
+              SizedBox(
+                height: 250.h,
+                child: DashboardPopularEvents(),
+              ),
             ],
           ),
         ),
