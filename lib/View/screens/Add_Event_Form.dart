@@ -157,7 +157,7 @@ class _AddEventFormState extends State<AddEventForm> {
                 // Family Oriented Radio Button
                 Row(
                   children: [
-                    Text("Is this event family-oriented?"),
+                    Text("Family-Oriented?"),
                     Radio<bool>(
                       value: true,
                       groupValue: _isFamilyOriented,

@@ -76,4 +76,78 @@ class EventController extends GetxController {
     }
   }
 
+  Future<void> addEventToUser(String eventId) async{
+    try {
+
+      await FirebaseFirestore.instance.collection('user_events').add({
+        'uid': FirebaseAuth.instance.currentUser?.uid,
+        'eid': eventId,
+        'createdAt': Timestamp.now(),
+      });
+      Get.snackbar("Success", "You are Attending the Event");
+    } catch (e) {
+      Get.snackbar("Error", "$e");
+    }
+  }
+
+  Future<bool> isUserAttendingEvent(String eventId) async {
+    try {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+      if (userId == null) {
+        throw Exception("User not logged in");
+      }
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('user_events')
+          .where('uid', isEqualTo: userId)
+          .where('eid', isEqualTo: eventId)
+          .limit(1)
+          .get();
+
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      Get.snackbar("Error", "Failed to check attendance: $e");
+      return false;
+    }
+  }
+
+  Future<List<EventDataModel>> getEventsByUserId(String userId) async {
+    try {
+      QuerySnapshot userEventsSnapshot = await FirebaseFirestore.instance
+          .collection('user_events')
+          .where('uid', isEqualTo: userId)
+          .get();
+
+      List<String> eventIds = userEventsSnapshot.docs
+          .map((doc) => doc['eid'] as String)
+          .toList();
+
+      if (eventIds.isEmpty) {
+        return [];
+      }
+
+      QuerySnapshot eventsSnapshot = await FirebaseFirestore.instance
+          .collection('events')
+          .where(FieldPath.documentId, whereIn: eventIds)
+          .get();
+
+      List<EventDataModel> events = eventsSnapshot.docs.map((doc) {
+        return EventDataModel(
+          uid: doc['uid'],
+          title: doc['title'],
+          description: doc['description'],
+          location: doc['location'],
+          date: doc['date'],
+          time: doc['time'],
+          id: doc.id,
+        );
+      }).toList();
+
+      return events;
+    } catch (e) {
+      Get.snackbar("Error", "Failed to fetch events: $e");
+      return [];
+    }
+  }
 }

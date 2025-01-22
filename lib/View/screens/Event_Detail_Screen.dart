@@ -1,3 +1,5 @@
+import 'package:avatar_stack/animated_avatar_stack.dart';
+import 'package:avatar_stack/positions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,10 +14,10 @@ class EventDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EventController _eventController = Get.find<EventController>();
+    final EventController eventController = Get.find<EventController>();
 
     return FutureBuilder<EventDataModel?>(
-      future: _eventController.getEventById(eventId),  // Fetch event by ID
+      future: eventController.getEventById(eventId),  // Fetch event by ID
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -31,7 +33,6 @@ class EventDetailScreen extends StatelessWidget {
           );
         } else {
           event = snapshot.data!;
-
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
@@ -72,16 +73,20 @@ class EventDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 60,),
+                    SizedBox(height: 35,),
                     Stack(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(30)),
-                            child: Image.asset('assets/images/china_town.png'),
+                        Center(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height/2.5,
+                            width: MediaQuery.of(context).size.height/2.5,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                              child: Image.asset('assets/images/china_town.png'),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -134,7 +139,7 @@ class EventDetailScreen extends StatelessWidget {
                               children: [
                                 Icon(Icons.location_on, color: Colors.blueGrey),
                                 SizedBox(width: 7,),
-                                Text(event?.location ?? "No location", style: TextStyle(
+                                Text(event?.location!.capitalize! ?? "No location", style: TextStyle(
                                     fontSize: 18,
                                     color: Colors.blueGrey,
                                     fontWeight: FontWeight.w600
@@ -156,6 +161,45 @@ class EventDetailScreen extends StatelessWidget {
                           ),),
                         )
                       ],
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width/3,
+                          child: AnimatedAvatarStack(
+                            height: 50,
+                            avatars: [
+                                for (var n = 0; n < 3; n++) NetworkImage('https://i.pravatar.cc/150?img=$n'),
+                              ],
+                          ),
+                        ),
+                        SizedBox(width: 7,),
+                        RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              fontSize: 16
+                            ), // Use the default text style
+                            children: [
+                              TextSpan(
+                                text: "250K",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.deepOrange,
+                                ),
+                              ),
+                              TextSpan(
+                                text: " People are Joined",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blueGrey
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+
+                      ]
                     ),
                     SizedBox(height: 20,),
                     Text("Description", style: TextStyle(
@@ -210,17 +254,31 @@ class EventDetailScreen extends StatelessWidget {
                             )),
                           ],
                         ),
-                        ElevatedButton(
-                            onPressed: ()=>{},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepOrange, // Background color
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12), // Radius of the button
-                              ),
-                            ),
-                            child: Text("Get A Ticket", style: TextStyle(
-                                color: Colors.white
-                            ),)
+                        FutureBuilder<bool>(
+                          future: eventController.isUserAttendingEvent(event?.id ?? ""),
+                          builder: (context, snapshot) {
+                            bool isAttending = snapshot.data ?? false;
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Text("Loading");
+                            }
+                            else {
+                              return ElevatedButton(
+                                onPressed: isAttending ? null : () {
+                                  eventController.addEventToUser(event?.id ?? "");
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isAttending ? Colors.blueGrey : Colors.deepOrange,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  isAttending ? "Attending" : "Get A Ticket",
+                                  style: isAttending ?TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.white),
+                                ),
+                              );
+                            }
+                          },
                         )
                       ],
                     )
