@@ -46,7 +46,26 @@ class _AddEventFormState extends State<AddEventForm> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.deepOrange.shade300,
+              onPrimary: Colors.white,
+              onSurface: Colors.deepOrange,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.deepOrange,
+                backgroundColor: Colors.deepOrange.shade50
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (pickedDate != null && pickedDate != _selectedDate) {
       setState(() {
         _selectedDate = pickedDate;
@@ -54,17 +73,38 @@ class _AddEventFormState extends State<AddEventForm> {
     }
   }
 
+
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: Colors.deepOrange.shade300,
+              onPrimary: Colors.white,
+              onSurface: Colors.deepOrange,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.deepOrange,
+                backgroundColor: Colors.deepOrange.shade50,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (pickedTime != null && pickedTime != _selectedTime) {
       setState(() {
         _selectedTime = pickedTime;
       });
     }
   }
+
 
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
@@ -120,25 +160,58 @@ class _AddEventFormState extends State<AddEventForm> {
                         ),
                         ) : NoText(text: 'No Images Selected'),
                   SizedBox(height: 16.0),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: _selectedDate == null ? NoText(text: 'No Date Selected', noBg: true,) : Text(
-                          'Date: ${DateFormat('MMMM dd, yyyy').format(_selectedDate!)}',
+                  Container(
+                    padding: EdgeInsets.only(right: 23, top: 7, bottom: 7),
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey.shade50,
+                      borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                            color: _selectedDate == null ? Colors.transparent : Colors.deepOrange,
+                            width: 2
+                        )
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: _selectedDate == null ? NoText(text: 'No Date Selected', noBg: true,) : Container(
+                            padding: EdgeInsets.only(left: 23),
+                            child: Text(
+                              DateFormat('MMMM dd, yyyy').format(_selectedDate!), style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepOrange
+                            ),),
+                          ),
                         ),
-                      ),
-                      CustomGui.textButton('Select date', () => _selectDate(context))
-                    ],
+                        CustomGui.textButton('Select date', () => _selectDate(context))
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: _selectedTime == null ? NoText(text: 'No Time Selected', noBg: true,) : Text(
-                          'Time: ${_selectedTime!.format(context)}',
+                  SizedBox(height: 10,),
+                  Container(
+                    padding: EdgeInsets.only(right: 23, top: 7, bottom: 7),
+                    decoration: BoxDecoration(
+                        color: Colors.blueGrey.shade50,
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: _selectedTime == null ? Colors.transparent : Colors.deepOrange,
+                          width: 2
+                        )
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: _selectedTime == null ? NoText(text: 'No Time Selected', noBg: true,) : Container(
+                            padding: EdgeInsets.only(left: 23),
+                            child: Text(
+                              _selectedTime!.format(context), style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepOrange
+                            ),),
+                          ),
                         ),
-                      ),
-                      CustomGui.textButton('Select time', () => _selectTime(context))
-                    ],
+                        CustomGui.textButton('Select time', () => _selectTime(context))
+                      ],
+                    ),
                   ),
                   SizedBox(height: 16.0),
                   EventSphereRadioButton(
@@ -167,44 +240,9 @@ class _AddEventFormState extends State<AddEventForm> {
                             isFamilyOriented: _isFamilyOriented,
                           );
                           eventController.addEvent(event);
-                          //DEBUG:
-                          // print('Event Name: ${_eventNameController.text}');
-                          // print('Description: ${_descriptionController.text}');
-                          // print('Location: ${_locationController.text}');
-                          // print('Date: ${_selectedDate.toString()}');
-                          // print('Time: ${_selectedTime.toString()}');
-                          // print('Ticket Price: ${_ticketPriceController.text}');
-                          // print('Is Family Oriented: $_isFamilyOriented');
                         }
                       }
                   ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     if (_formKey.currentState!.validate()) {
-                  //       EventDataModel event = EventDataModel(
-                  //         title: _eventNameController.text,
-                  //         description: _descriptionController.text,
-                  //         location: _locationController.text,
-                  //         date: _selectedDate.toString(),
-                  //         time: _selectedTime!.format(context),
-                  //         uid: FirebaseAuth.instance.currentUser?.uid,
-                  //         ticketPrice: _ticketPriceController.text,
-                  //         images: _selectedImages,
-                  //         isFamilyOriented: _isFamilyOriented,
-                  //       );
-                  //       eventController.addEvent(event);
-                  //       //DEBUG:
-                  //       // print('Event Name: ${_eventNameController.text}');
-                  //       // print('Description: ${_descriptionController.text}');
-                  //       // print('Location: ${_locationController.text}');
-                  //       // print('Date: ${_selectedDate.toString()}');
-                  //       // print('Time: ${_selectedTime.toString()}');
-                  //       // print('Ticket Price: ${_ticketPriceController.text}');
-                  //       // print('Is Family Oriented: $_isFamilyOriented');
-                  //     }
-                  //   },
-                  //   child: Text('Submit'),
-                  // ),
                 ],
               ),
             ),

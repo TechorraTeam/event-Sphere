@@ -1,5 +1,7 @@
+import 'package:avatar_stack/animated_avatar_stack.dart';
 import 'package:event_sphere/View/screens/Add_Event_Form.dart';
 import 'package:event_sphere/View/screens/Event_Detail_Screen.dart';
+import 'package:event_sphere/Widgets/EventCard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:event_sphere/controller/event_controller.dart';
@@ -34,68 +36,7 @@ final EventController _eventController = Get.put(EventController());
                 ),
                 itemCount: events.length,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () => {
-                      Get.to(EventDetailScreen(eventId: events[index].id ?? "",))
-                    },
-                    child: Card(
-                      elevation: 7,
-                      color: Colors.amber.shade200,
-                      child: ListTile(
-                        title: Text(
-                          events[index].title?.capitalize ?? "",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                        ),
-                        subtitle: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              events[index].description ?? "",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.location_pin, color: Colors.lightGreen),
-                                    Text(
-                                      events[index].location?.capitalize?.split(' ')[0].replaceAll(',', '') ?? "",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.lightGreen,
-                                          fontWeight: FontWeight.w600
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Spacer(),
-                                Row(
-                                  children: [
-                                    Icon(Icons.calendar_month_rounded, color: Colors.blueAccent),
-                                    SizedBox(width: 2),
-                                    Text(formatDateString(events[index].date  ?? ""), style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    )),
-                                    SizedBox(width: 4),
-                                    Text(events[index].time ?? "", style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    ))
-                                  ],
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
+                  return EventCard(eventDataModel: events[index]);
                 },
               ),
             );
