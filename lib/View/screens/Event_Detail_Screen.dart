@@ -77,14 +77,17 @@ class EventDetailScreen extends StatelessWidget {
                       children: [
                         Center(
                           child: Container(
-                            height: MediaQuery.of(context).size.height/2.5,
-                            width: MediaQuery.of(context).size.height/2.5,
+                            height: MediaQuery.of(context).size.height - 550,
+                            width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(30)),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.all(Radius.circular(30)),
-                              child: Image.asset('assets/images/china_town.png'),
+                              child: Image.asset(
+                                  'assets/images/china_town.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),

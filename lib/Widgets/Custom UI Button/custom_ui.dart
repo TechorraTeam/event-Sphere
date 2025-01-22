@@ -75,18 +75,20 @@ class CustomGui {
               color: Colors.blueGrey,
             ),
             floatingLabelStyle: TextStyle(
-              color: Colors.deepOrange, // Label color when focused
+              color: Colors.deepOrange,
             ),
             hintText: 'Enter your $text',
             hintStyle: TextStyle(
               color: Colors.deepOrange.shade300,
               fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold
             ),
             border: OutlineInputBorder(
-              // Default border
-              borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.orange,
+                color: Colors.blueGrey,
                 width: 2,
               ),
             ),
@@ -152,7 +154,7 @@ class CustomGui {
       ),
       child: Text(
         name,
-        style: isDisabled ? TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.white),
+        style: isDisabled ? TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.deepOrange.shade500),
       ),
     );
   }
