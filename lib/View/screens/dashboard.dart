@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 import 'package:event_sphere/Widgets/custom%20list%20view/dashboard_popular_events.dart';
-=======
 import 'package:event_sphere/View/screens/Add_Event_Form.dart';
 import 'package:event_sphere/View/screens/Events_Screen.dart';
 import 'package:event_sphere/View/screens/My_Events_Screen.dart';
->>>>>>> 0b36a06df2c808727a125b175fedd299e2dcb36a
 import 'package:event_sphere/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,7 +46,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-<<<<<<< HEAD
                     Text("Popular Events",style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500
@@ -68,13 +64,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 height: 250.h,
                 child: DashboardPopularEvents(),
               ),
-=======
-                    Text("Popular Events"),
-                    Text("View All",style: TextStyle(color: const Color.fromARGB(255, 156, 156, 156),fontSize: 11),),
-                  ],
-                ),
-              ),
->>>>>>> 0b36a06df2c808727a125b175fedd299e2dcb36a
             ],
           ),
         ),
