@@ -58,27 +58,42 @@ class CustomGui {
   }
 
   static Widget textField(TextEditingController controller, String text) {
-    return Container(
+    return SizedBox(
         height: 45.h,
         width: 280.w,
         child: TextFormField(
           controller: controller,
+          style: TextStyle(
+            color: Colors.deepOrange.shade900,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none
+          ),
           decoration: InputDecoration(
             labelText: text,
             labelStyle: TextStyle(
               fontSize: 16,
-              color: Colors.grey,
+              color: Colors.blueGrey,
+            ),
+            floatingLabelStyle: TextStyle(
+              color: Colors.deepOrange, // Label color when focused
             ),
             hintText: 'Enter your $text',
             hintStyle: TextStyle(
-              color: Colors.grey[400],
+              color: Colors.deepOrange.shade300,
               fontStyle: FontStyle.italic,
             ),
             border: OutlineInputBorder(
               // Default border
               borderRadius: BorderRadius.circular(0),
               borderSide: BorderSide(
-                color: Colors.blue,
+                color: Colors.orange,
+                width: 2,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: Colors.deepOrange,
                 width: 2,
               ),
             ),
@@ -124,4 +139,65 @@ class CustomGui {
 
   static final emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
+  static Widget primaryButton(String name, Function()? onPressed,
+      {bool isDisabled = false}){
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isDisabled ? Colors.blueGrey : Colors.deepOrange,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Text(
+        name,
+        style: isDisabled ? TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  static Widget secondaryButton(String name, Function()? onPressed,
+      {bool isDisabled = false}){
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isDisabled ? Colors.blueGrey : Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+          side: BorderSide(
+            color: Colors.deepOrange,
+            width: 2
+          )
+        ),
+      ),
+      child: Text(
+        name,
+        style: isDisabled ? TextStyle(color: Colors.deepOrange) : TextStyle(color: Colors.deepOrange),
+      ),
+    );
+  }
+
+  static Widget textButton(String name, Function()? onPressed,
+      {bool isDisabled = false}){
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        foregroundColor: Colors.deepOrange.shade900,
+        backgroundColor: Colors.deepOrange.shade100,
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+      ),
+      child: Text(
+        name,
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
 }

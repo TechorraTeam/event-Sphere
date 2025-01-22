@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:event_sphere/Widgets/Custom%20UI%20Button/custom_ui.dart';
+import 'package:event_sphere/Widgets/EventSphereRadioButton.dart';
+import 'package:event_sphere/Widgets/NoText.dart';
 import 'package:event_sphere/controller/event_controller.dart';
 import 'package:event_sphere/model/event_data_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,12 +27,12 @@ class _AddEventFormState extends State<AddEventForm> {
 
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-  bool _isFamilyOriented = false;
+  final bool _isFamilyOriented = false;
 
-  // List to store selected images
   List<String> _selectedImages = [];
 
   final ImagePicker _picker = ImagePicker();
+  ValueNotifier<String> selectedGender = ValueNotifier<String>("Male");
 
   @override
   void initState() {
@@ -66,149 +68,145 @@ class _AddEventFormState extends State<AddEventForm> {
 
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
-    if (pickedFiles != null) {
-      setState(() {
-        // _selectedImages = pickedFiles.map((file) => File(file.path)).toList();
-        _selectedImages = pickedFiles.map((file) => file.path).toList();
-      });
+    setState(() {
+      // _selectedImages = pickedFiles.map((file) => File(file.path)).toList();
+      _selectedImages = pickedFiles.map((file) => file.path).toList();
+    });
     }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Event'),
+        backgroundColor: Colors.deepOrange.shade50,
       ),
+      backgroundColor: Colors.deepOrange.shade50,
       body: GetBuilder<EventController>(builder: (eventController) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                CustomGui.textField(_eventNameController, 'Event Name'),
-                SizedBox(height: 16.0),
-                CustomGui.textField(_descriptionController, 'Description'),
-                SizedBox(height: 16.0),
-                CustomGui.textField(_locationController, 'Location'),
-                SizedBox(height: 16.0),
-                CustomGui.textField(_ticketPriceController, 'Ticket Price'),
-                SizedBox(height: 16.0),
-                // Image Picker Button
-                ElevatedButton(
-                  onPressed: _pickImages,
-                  child: Text('Pick Images'),
-                ),
-                SizedBox(height: 16.0),
-                // Display previews of selected images
-                _selectedImages.isNotEmpty
-                    ? Container(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _selectedImages.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.file(
-                          File(_selectedImages[index]),
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  CustomGui.textField(_eventNameController, 'Event Name'),
+                  SizedBox(height: 16.0),
+                  CustomGui.textField(_descriptionController, 'Description'),
+                  SizedBox(height: 16.0),
+                  CustomGui.textField(_locationController, 'Location'),
+                  SizedBox(height: 16.0),
+                  CustomGui.textField(_ticketPriceController, 'Ticket Price'),
+                  SizedBox(height: 16.0),
+                  CustomGui.secondaryButton('Pick Images', _pickImages),
+                  SizedBox(height: 16.0),
+                  _selectedImages.isNotEmpty
+                      ? SizedBox(
+                        height: 100,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _selectedImages.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.file(
+                                File(_selectedImages[index]),
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
                         ),
-                      );
+                        ) : NoText(text: 'No Images Selected'),
+                  SizedBox(height: 16.0),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: _selectedDate == null ? NoText(text: 'No Date Selected', noBg: true,) : Text(
+                          'Date: ${DateFormat('MMMM dd, yyyy').format(_selectedDate!)}',
+                        ),
+                      ),
+                      CustomGui.textButton('Select date', () => _selectDate(context))
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: _selectedTime == null ? NoText(text: 'No Time Selected', noBg: true,) : Text(
+                          'Time: ${_selectedTime!.format(context)}',
+                        ),
+                      ),
+                      CustomGui.textButton('Select time', () => _selectTime(context))
+                    ],
+                  ),
+                  SizedBox(height: 16.0),
+                  EventSphereRadioButton(
+                    title: "Is Family Oriented?",
+                    options: ['Yes', 'No'],
+                    isBoolMode: true,
+                    initialSelection: true,
+                    onChanged: (value) {
+                      print('Selected: $value');
                     },
                   ),
-                )
-                    : Text('No images selected'),
-                SizedBox(height: 16.0),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _selectedDate == null
-                            ? 'No date selected'
-                            : 'Date: ${DateFormat('MMMM dd, yyyy').format(_selectedDate!)}',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => _selectDate(context),
-                      child: Text('Select date'),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _selectedTime == null
-                            ? 'No time selected'
-                            : 'Time: ${_selectedTime!.format(context)}',
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => _selectTime(context),
-                      child: Text('Select time'),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                // Family Oriented Radio Button
-                Row(
-                  children: [
-                    Text("Family-Oriented?"),
-                    Radio<bool>(
-                      value: true,
-                      groupValue: _isFamilyOriented,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _isFamilyOriented = value!;
-                        });
-                      },
-                    ),
-                    Text("Yes"),
-                    Radio<bool>(
-                      value: false,
-                      groupValue: _isFamilyOriented,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _isFamilyOriented = value!;
-                        });
-                      },
-                    ),
-                    Text("No"),
-                  ],
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      EventDataModel event = EventDataModel(
-                        title: _eventNameController.text,
-                        description: _descriptionController.text,
-                        location: _locationController.text,
-                        date: _selectedDate.toString(),
-                        time: _selectedTime!.format(context),
-                        uid: FirebaseAuth.instance.currentUser?.uid,
-                        ticketPrice: _ticketPriceController.text,
-                        images: _selectedImages,
-                        isFamilyOriented: _isFamilyOriented,
-                      );
-                      eventController.addEvent(event);
-                      //DEBUG:
-                      print('Event Name: ${_eventNameController.text}');
-                      print('Description: ${_descriptionController.text}');
-                      print('Location: ${_locationController.text}');
-                      print('Date: ${_selectedDate.toString()}');
-                      print('Time: ${_selectedTime.toString()}');
-                      print('Ticket Price: ${_ticketPriceController.text}');
-                      print('Is Family Oriented: $_isFamilyOriented');
-                    }
-                  },
-                  child: Text('Submit'),
-                ),
-              ],
+                  SizedBox(height: 16.0),
+                  CustomGui.primaryButton(
+                      "Submit",
+                          () {
+                        if (_formKey.currentState!.validate()) {
+                          EventDataModel event = EventDataModel(
+                            title: _eventNameController.text,
+                            description: _descriptionController.text,
+                            location: _locationController.text,
+                            date: _selectedDate.toString(),
+                            time: _selectedTime!.format(context),
+                            uid: FirebaseAuth.instance.currentUser?.uid,
+                            ticketPrice: _ticketPriceController.text,
+                            images: _selectedImages,
+                            isFamilyOriented: _isFamilyOriented,
+                          );
+                          eventController.addEvent(event);
+                          //DEBUG:
+                          // print('Event Name: ${_eventNameController.text}');
+                          // print('Description: ${_descriptionController.text}');
+                          // print('Location: ${_locationController.text}');
+                          // print('Date: ${_selectedDate.toString()}');
+                          // print('Time: ${_selectedTime.toString()}');
+                          // print('Ticket Price: ${_ticketPriceController.text}');
+                          // print('Is Family Oriented: $_isFamilyOriented');
+                        }
+                      }
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     if (_formKey.currentState!.validate()) {
+                  //       EventDataModel event = EventDataModel(
+                  //         title: _eventNameController.text,
+                  //         description: _descriptionController.text,
+                  //         location: _locationController.text,
+                  //         date: _selectedDate.toString(),
+                  //         time: _selectedTime!.format(context),
+                  //         uid: FirebaseAuth.instance.currentUser?.uid,
+                  //         ticketPrice: _ticketPriceController.text,
+                  //         images: _selectedImages,
+                  //         isFamilyOriented: _isFamilyOriented,
+                  //       );
+                  //       eventController.addEvent(event);
+                  //       //DEBUG:
+                  //       // print('Event Name: ${_eventNameController.text}');
+                  //       // print('Description: ${_descriptionController.text}');
+                  //       // print('Location: ${_locationController.text}');
+                  //       // print('Date: ${_selectedDate.toString()}');
+                  //       // print('Time: ${_selectedTime.toString()}');
+                  //       // print('Ticket Price: ${_ticketPriceController.text}');
+                  //       // print('Is Family Oriented: $_isFamilyOriented');
+                  //     }
+                  //   },
+                  //   child: Text('Submit'),
+                  // ),
+                ],
+              ),
             ),
           ),
         );
