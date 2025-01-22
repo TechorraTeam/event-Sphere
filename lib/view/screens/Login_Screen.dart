@@ -50,6 +50,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                       fontSize: 15, color: Colors.red),
                                 )
                               : Container(),
+                          authController.invalidEmailFormat
+                              ? Text(
+                                  'Email format is incorrect',
+                                  style: TextStyle(
+                                      fontSize: 15, color: Colors.red),
+                                )
+                              : Container(),
                         ],
                       )),
                 ),
@@ -80,8 +87,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20.h,
                 ),
                 CustomGui.customButton('Login', () {
-                  authController.login(
-                      emailController.text, passwordController.text);
+                  if (emailController.text == "" ||
+                      passwordController.text == "") {
+                    Get.snackbar(
+                        "Error", "Please enter both email and password..");
+                  } else {
+                    if (authController.isValidEmail(emailController.text)) {
+                      authController.login(
+                          emailController.text, passwordController.text);
+                    }
+                  }
                 }),
                 SizedBox(
                   height: 10.h,

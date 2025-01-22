@@ -7,7 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthController extends GetxController {
   bool isNotAuthorised = false;
-  List<UserDataModel> userModel = [];
+  bool invalidEmailFormat = false;
+  UserDataModel? userModel;
   Future<void> signUp(String email, String password) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -25,17 +26,12 @@ class AuthController extends GetxController {
       var user = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       isNotAuthorised = false;
-      update();
-      QuerySnapshot<Map<String, dynamic>> data =
-          await FirebaseFirestore.instance.collection('users').get();
-      List<DocumentSnapshot> allData = data.docs;
-      Get.off(DashboardScreen());
-
-      for (var data in allData) {
-        userModel.add(UserDataModel.fromDocumentSnapshot(data));
+      bool userExists = await fetchingUserDataFromFireStore();
+      //if no user is in Userdatamodel than sign up first
+      if (userExists) {
+        update();
+        Get.off(DashboardScreen());
       }
-      update();
-      Get.off(DashboardScreen());
     } on FirebaseAuthException catch (e) {
       isNotAuthorised = true;
       update();
@@ -46,7 +42,8 @@ class AuthController extends GetxController {
   void logOut() async {
     try {
       await FirebaseAuth.instance.signOut();
-      print('User signed out');
+      userModel=null;
+      Get.to(LoginScreen());
     } catch (e) {
       print('Error signing out: $e');
     }
@@ -71,7 +68,7 @@ class AuthController extends GetxController {
     // update();
   }
 
-  Future<void> fetchingUserDataFromFireStore() async {
+  Future<bool> fetchingUserDataFromFireStore() async {
     final userId = FirebaseAuth.instance.currentUser;
     try {
       DocumentSnapshot docRef = await FirebaseFirestore.instance
@@ -81,13 +78,16 @@ class AuthController extends GetxController {
 
       if (docRef.exists) {
         UserDataModel userData = UserDataModel.fromDocumentSnapshot(docRef);
-        userModel = [userData];
+        userModel = userData;
         update();
+        return true;
       } else {
         Get.snackbar("Error", "User not found.");
+        return false;
       }
     } on FirebaseException catch (e) {
       Get.snackbar("Error", "$e");
+      return false;
     }
   }
 
@@ -111,5 +111,14 @@ class AuthController extends GetxController {
     } else {
       Get.off(LoginScreen());
     }
+  }
+
+  bool isValidEmail(String email) {
+    final emailRegExp = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+    );
+    invalidEmailFormat = !emailRegExp.hasMatch(email);
+    update();
+    return emailRegExp.hasMatch(email);
   }
 }

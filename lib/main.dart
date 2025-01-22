@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           
           home:
               //TestingFile(),
-              DashboardScreen(),
+              SplashScreen(),
         );
       },
     );
