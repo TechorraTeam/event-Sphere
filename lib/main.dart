@@ -25,10 +25,9 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          
           home:
               //TestingFile(),
-              DashboardScreen(),
+              SplashScreen(),
         );
       },
     );

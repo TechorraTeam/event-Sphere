@@ -36,7 +36,9 @@ final EventController _eventController = Get.put(EventController());
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () => {
-                      Get.to(EventDetailScreen(eventId: events[index].id ?? "",))
+                      Get.to(EventDetailScreen(
+                        eventId: events[index].id ?? "",
+                      ))
                     },
                     child: Card(
                       elevation: 7,
@@ -45,7 +47,8 @@ final EventController _eventController = Get.put(EventController());
                         title: Text(
                           events[index].title?.capitalize ?? "",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.w600),
                         ),
                         subtitle: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -60,33 +63,43 @@ final EventController _eventController = Get.put(EventController());
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.location_pin, color: Colors.lightGreen),
+                                    Icon(Icons.location_pin,
+                                        color: Colors.lightGreen),
                                     Text(
-                                      events[index].location?.capitalize?.split(' ')[0].replaceAll(',', '') ?? "",
+                                      events[index]
+                                              .location
+                                              ?.capitalize
+                                              ?.split(' ')[0]
+                                              .replaceAll(',', '') ??
+                                          "",
                                       style: TextStyle(
                                           fontSize: 15,
                                           color: Colors.lightGreen,
-                                          fontWeight: FontWeight.w600
-                                      ),
+                                          fontWeight: FontWeight.w600),
                                     )
                                   ],
                                 ),
                                 Spacer(),
                                 Row(
                                   children: [
-                                    Icon(Icons.calendar_month_rounded, color: Colors.blueAccent),
+                                    Icon(Icons.calendar_month_rounded,
+                                        color: Colors.blueAccent),
                                     SizedBox(width: 2),
-                                    Text(formatDateString(events[index].date  ?? ""), style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    )),
+                                    Text(
+                                        formatDateString(
+                                            events[index].date ?? ""),
+                                        style: TextStyle(
+                                          color: Colors.blueAccent,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                        )),
                                     SizedBox(width: 4),
-                                    Text(events[index].time ?? "", style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
-                                    ))
+                                    Text(events[index].time ?? "",
+                                        style: TextStyle(
+                                          color: Colors.blueAccent,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                        ))
                                   ],
                                 )
                               ],
@@ -107,7 +120,10 @@ final EventController _eventController = Get.put(EventController());
         onPressed: () {
           Get.to(AddEventForm());
         },
-        child: Icon(Icons.add, weight: 30,),
+        child: Icon(
+          Icons.add,
+          weight: 30,
+        ),
         tooltip: 'Add Event',
       ),
     );
@@ -121,8 +137,18 @@ String formatDateString(String dateString) {
 
 String _getMonthName(int month) {
   const months = [
-    "Jan", "Feb", "Mar", "April", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "Jan",
+    "Feb",
+    "Mar",
+    "April",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
   ];
   return months[month - 1];
 }
