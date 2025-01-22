@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_sphere/View/screens/dashboard.dart';
 import 'package:event_sphere/controller/auth_controller.dart';
 import 'package:event_sphere/Resources/Images/assets_images.dart';
@@ -15,18 +16,17 @@ class Singup extends StatefulWidget {
 }
 
 class _SingupState extends State<Singup> {
+  final ValueNotifier<String> selectedGender = ValueNotifier<String>("");
+
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.put(AuthController());
 
     final ImagePickerController controller = Get.put(ImagePickerController());
-
-    final ValueNotifier<String> selectedGender = ValueNotifier<String>("");
-
-    TextEditingController username = TextEditingController();
-    TextEditingController email = TextEditingController();
-    TextEditingController password = TextEditingController();
-    TextEditingController confirmPassword = TextEditingController();
 
     return Scaffold(
       body: Container(
@@ -78,22 +78,22 @@ class _SingupState extends State<Singup> {
                 height: 20,
               ),
               CustomGui.customFormField(
-                  "UserName", "Please Enter Username.", false, username),
+                  "UserName", "Please Enter Username.", false, _username),
               SizedBox(
                 height: 8,
               ),
               CustomGui.customFormField(
-                  "Email", "Please Enter Email.", false, email),
+                  "Email", "Please Enter Email.", false, _email),
               SizedBox(
                 height: 8,
               ),
               CustomGui.customFormField(
-                  "Password", "Please Enter Password.", true, password),
+                  "Password", "Please Enter Password.", true, _password),
               SizedBox(
                 height: 8,
               ),
               CustomGui.customFormField("Confirm Password",
-                  "Please Enter Confirm Password.", true, confirmPassword),
+                  "Please Enter Confirm Password.", true, _confirmPassword),
               SizedBox(
                 height: 15,
               ),
@@ -107,25 +107,36 @@ class _SingupState extends State<Singup> {
               CustomGui.customButton(
                 "SignUp",
                 () {
-                  if (!CustomGui.emailRegex.hasMatch(email.text)) {
-                    Get.snackbar("Error", "Enter Valid Email.");
-                  } else if (password.text != confirmPassword.text) {
-                    Get.snackbar("Error", "Invalid password match.");
-                  } else if (email.text.isNotEmpty ||
-                      password.text.isNotEmpty) {
-                    authController.signUp(email.text, password.text).then((_) {
-                      authController.addUserToDatabase(
-                        username.text,
-                        email.text,
-                        selectedGender.value,
-                      );
-                    }).then((_) {
-                      Get.offAll(() => DashboardScreen());
-                    });
+                  try {
+                    if (!CustomGui.emailRegex.hasMatch(_email.text)) {
+                      Get.snackbar("Error", "Enter Valid Email.");
+                    } else if (_password.text != _confirmPassword.text) {
+                      Get.snackbar("Error", "Invalid password match.");
+                    } else if (_password.text.length <= 7) {
+                      Get.snackbar(
+                          "Error", "Password must be 8 character long");
+                    } else if (_email.text.isNotEmpty ||
+                        _password.text.isNotEmpty ||
+                        selectedGender.value.isNotEmpty ||
+                        _username.text.isNotEmpty) {
+                      authController
+                          .signUp(_email.text, _password.text)
+                          .then((_) {
+                        authController.addUserToDatabase(
+                          _username.text,
+                          _email.text,
+                          selectedGender.value,
+                        );
+                      }).then((_) {
+                        Get.offAll(() => DashboardScreen());
+                      });
 
-                    print("Successfully created account.");
-                  } else {
-                    Get.snackbar("Error", 'Please Enter Email and Password');
+                      print("Successfully created account.");
+                    } else {
+                      Get.snackbar("Error", 'Please Enter Fields');
+                    }
+                  } on FirebaseException catch (e) {
+                    Get.snackbar("Error", "$e");
                   }
                 },
               ),

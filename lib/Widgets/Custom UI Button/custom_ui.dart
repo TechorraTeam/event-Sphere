@@ -1,5 +1,12 @@
+import 'package:event_sphere/Resources/Images/assets_images.dart';
+import 'package:event_sphere/View/screens/Events_Screen.dart';
+import 'package:event_sphere/controller/event_controller.dart';
+import 'package:event_sphere/model/event_data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
+import '../../View/screens/Event_Detail_Screen.dart';
 
 class CustomGui {
   static Widget customButton(String text, Function() onPressed) {
@@ -75,18 +82,20 @@ class CustomGui {
               color: Colors.blueGrey,
             ),
             floatingLabelStyle: TextStyle(
-              color: Colors.deepOrange, // Label color when focused
+              color: Colors.deepOrange,
             ),
             hintText: 'Enter your $text',
             hintStyle: TextStyle(
               color: Colors.deepOrange.shade300,
               fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold
             ),
             border: OutlineInputBorder(
-              // Default border
-              borderRadius: BorderRadius.circular(0),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
-                color: Colors.orange,
+                color: Colors.blueGrey,
                 width: 2,
               ),
             ),
@@ -137,6 +146,120 @@ class CustomGui {
     );
   }
 
+  static showingEventsCard(EventController controller) {
+    return FutureBuilder<List<EventDataModel>>(
+      future: controller.getAllEvents(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('No events available'));
+        } else {
+          final events = snapshot.data!;
+          return Padding(
+            padding: EdgeInsets.all(13),
+            child: ListView.separated(
+              shrinkWrap: true,
+              separatorBuilder: (context, index) => SizedBox(
+                height: 7,
+              ),
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () => {
+                    Get.to(EventDetailScreen(
+                      eventId: events[index].id ?? "",
+                    ))
+                  },
+                  child: Card(
+                    elevation: 7,
+                    color: Colors.white,
+                    child: ListTile(
+                      trailing: Container(
+                        width: 40,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 250, 222, 225),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Column(
+                          children: [
+                            Text(
+                              formatDateString(events[index].date ?? "")
+                                  .split(' ')[0],
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text(
+                              formatDateString(events[index].date ?? "")
+                                  .split(' ')[1]
+                                  .replaceAll(',', ''),
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
+                      ),
+                      leading: Container(
+                        width: 60,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              image: AssetImage(AssetsImages.chinaTownImage),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            events[index].title?.capitalize ?? "",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                      subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.location_pin, color: Colors.grey),
+                              Text(
+                                events[index].location?.capitalize ?? "",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
+  }
+
   static final emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
@@ -152,7 +275,7 @@ class CustomGui {
       ),
       child: Text(
         name,
-        style: isDisabled ? TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.white),
+        style: isDisabled ? TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.deepOrange.shade500),
       ),
     );
   }

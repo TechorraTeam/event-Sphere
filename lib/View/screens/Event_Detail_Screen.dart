@@ -1,5 +1,4 @@
 import 'package:avatar_stack/animated_avatar_stack.dart';
-import 'package:avatar_stack/positions.dart';
 import 'package:event_sphere/Widgets/Custom%20UI%20Button/custom_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +15,6 @@ class EventDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EventController eventController = Get.find<EventController>();
-
     return FutureBuilder<EventDataModel?>(
       future: eventController.getEventById(eventId),  // Fetch event by ID
       builder: (context, snapshot) {
@@ -79,14 +77,17 @@ class EventDetailScreen extends StatelessWidget {
                       children: [
                         Center(
                           child: Container(
-                            height: MediaQuery.of(context).size.height/2.5,
-                            width: MediaQuery.of(context).size.height/2.5,
+                            height: MediaQuery.of(context).size.height - 550,
+                            width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(Radius.circular(30)),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.all(Radius.circular(30)),
-                              child: Image.asset('assets/images/china_town.png'),
+                              child: Image.asset(
+                                  'assets/images/china_town.png',
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -122,85 +123,91 @@ class EventDetailScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 40,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(event?.title ?? "No title", style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600
-                            )),
-                            SizedBox(height: 7,),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.location_on, color: Colors.blueGrey),
-                                SizedBox(width: 7,),
-                                Text(event?.location!.capitalize! ?? "No location", style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.w600
-                                ),)
-                              ],
-                            )
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                              color: Colors.deepOrange.shade50,
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Text("\$${event?.ticketPrice ?? 0}", style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.deepOrange
-                          ),),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20,),
-                    Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width/3,
-                          child: AnimatedAvatarStack(
-                            height: 50,
-                            avatars: [
-                                for (var n = 0; n < 3; n++) NetworkImage('https://i.pravatar.cc/150?img=$n'),
-                              ],
-                          ),
-                        ),
-                        SizedBox(width: 7,),
-                        RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              fontSize: 16
-                            ), // Use the default text style
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TextSpan(
-                                text: "250K",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.deepOrange,
-                                ),
-                              ),
-                              TextSpan(
-                                text: " People are Joined",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blueGrey
-                                ),
-                              ),
+                              Text(event?.title ?? "No title", style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600
+                              )),
+                              SizedBox(height: 7,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.location_on, color: Colors.blueGrey),
+                                  SizedBox(width: 7,),
+                                  Text(event?.location!.capitalize! ?? "No location", style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.blueGrey,
+                                      fontWeight: FontWeight.w600
+                                  ),)
+                                ],
+                              )
                             ],
                           ),
-                        )
+                          Container(
+                            padding: EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                                color: Colors.deepOrange.shade50,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Text("\$${event?.ticketPrice ?? 0}", style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.deepOrange
+                            ),),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width/3,
+                              child: AnimatedAvatarStack(
+                                height: 50,
+                                avatars: [
+                                  for (var n = 0; n < 3; n++) NetworkImage('https://i.pravatar.cc/150?img=$n'),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 7,),
+                            RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                    fontSize: 16
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: "250K",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.deepOrange,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: " People Joined",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.blueGrey
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
 
-                      ]
+                          ]
+                      ),
                     ),
                     SizedBox(height: 20,),
                     Text("Description", style: TextStyle(
@@ -287,7 +294,7 @@ class EventDetailScreen extends StatelessWidget {
 
 String getMonthFromDate(String dateString) {
   DateTime dateTime = DateTime.parse(dateString);
-  return DateFormat('MMM').format(dateTime); // "Jan"
+  return DateFormat('MMM').format(dateTime);
 }
 
 int getDayFromDate(String dateString) {
