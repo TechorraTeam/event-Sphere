@@ -1,5 +1,6 @@
 import 'package:avatar_stack/animated_avatar_stack.dart';
 import 'package:avatar_stack/positions.dart';
+import 'package:event_sphere/Widgets/Custom%20UI%20Button/custom_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -262,20 +263,12 @@ class EventDetailScreen extends StatelessWidget {
                               return Text("Loading");
                             }
                             else {
-                              return ElevatedButton(
-                                onPressed: isAttending ? null : () {
-                                  eventController.addEventToUser(event?.id ?? "");
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isAttending ? Colors.blueGrey : Colors.deepOrange,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                                child: Text(
+                              return CustomGui.primaryButton(
                                   isAttending ? "Attending" : "Get A Ticket",
-                                  style: isAttending ?TextStyle(color: Colors.deepOrange) :TextStyle(color: Colors.white),
-                                ),
+                                  isAttending ? null : () {
+                                    eventController.addEventToUser(event?.id ?? "");
+                                  },
+                                  isDisabled: !isAttending
                               );
                             }
                           },
